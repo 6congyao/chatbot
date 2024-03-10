@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"log"
 
 	"github.com/carlmjohnson/requests"
 	"github.com/ybbus/httpretry"
@@ -28,10 +29,11 @@ func sendMessage(message string, customerId string, messageType string) error {
 	messageMap["text"] = message
 	var messageMapJSON, _messageErr = json.Marshal(&messageMap)
 
-	if _customerIdErr == nil || _messageErr == nil {
+	if _customerIdErr == nil || _messageErr != nil {
 		return errors.New("JSON serialization error")
 	}
 
+	log.Println(messageMap)
 	cl := httpretry.NewDefaultClient() //Used for retries
 	var err = requests.
 		URL(baseEndpoint).

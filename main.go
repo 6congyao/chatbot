@@ -45,7 +45,6 @@ func botHandler(ctx context.Context, event events.APIGatewayProxyRequest) (event
 func verifyHandler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 
 	var queryParameters = event.QueryStringParameters
-	log.Println(queryParameters)
 	if queryParameters["hub.verify_token"] == "CONGYAO_VERIFIY_TOKEN" && queryParameters["hub.mode"] == "subscribe" {
 		response := events.APIGatewayProxyResponse{
 			StatusCode: 200,
