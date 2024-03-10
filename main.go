@@ -25,7 +25,7 @@ func botHandler(ctx context.Context, event events.APIGatewayProxyRequest) (event
 		return response, nil
 	}
 
-	_err = parseEvent(facebookEvent)
+	replyMsg, _err := parseEvent(facebookEvent)
 	if _err != nil {
 		log.Println(_err)
 		response = events.APIGatewayProxyResponse{
@@ -37,6 +37,11 @@ func botHandler(ctx context.Context, event events.APIGatewayProxyRequest) (event
 			StatusCode: 200,
 			Body:       event.Body,
 		}
+		_err = store(facebookEvent, replyMsg)
+		if _err != nil {
+			log.Println(_err)
+		}
+
 	}
 
 	return response, nil
