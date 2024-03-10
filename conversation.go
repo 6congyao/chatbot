@@ -7,7 +7,7 @@ func parseEvent(event FacebookEvent) error {
 		// callChatGPTToCheckIfMessageSuggestReview(event.Message) returns boolean
 		if true { //Swap this out based on ChatGPT response
 			return sendMessage("Please feel free to provide a review about our Page!",
-				event.CustomerId, "UPDATE")
+				event.CustomerId, "RESPONSE")
 		}
 	} else {
 		// review := event.Message
