@@ -59,6 +59,7 @@ func sendMessage(message string, customerId string, messageType string) error {
 	var err = requests.
 		URL(baseEndpoint).
 		Param("access_token", FB_PAGE_ACCESS_TOKEN).
+		Post().
 		ContentType("application/json").
 		BodyJSON(&req).
 		Client(cl).
