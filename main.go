@@ -14,6 +14,7 @@ func botHandler(ctx context.Context, event events.APIGatewayProxyRequest) (event
 		return verifyHandler(ctx, event)
 	}
 
+	log.Println(event.Body)
 	var facebookEvent, _err = makeFacebookEvent(event.Body)
 	var response events.APIGatewayProxyResponse
 	if _err != nil {
@@ -45,7 +46,7 @@ func verifyHandler(ctx context.Context, event events.APIGatewayProxyRequest) (ev
 
 	var queryParameters = event.QueryStringParameters
 	log.Println(queryParameters)
-	if queryParameters["hub.verify_token"] == "CONGYAO_VERIFIY_TOKEN" {
+	if queryParameters["hub.verify_token"] == "CONGYAO_VERIFIY_TOKEN" && queryParameters["hub.mode"] == "subscribe" {
 		response := events.APIGatewayProxyResponse{
 			StatusCode: 200,
 			Body:       queryParameters["hub.challenge"],
