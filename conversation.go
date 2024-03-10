@@ -1,7 +1,7 @@
 package main
 
 func parseEvent(event FacebookEvent) error {
-	if event.Field == "feed" {
+	if event.Field == "messages" {
 		//Make some call to ChatGPT asking if the comment posted on the
 		//Page suggests user wants to give a review
 		// callChatGPTToCheckIfMessageSuggestReview(event.Message) returns boolean
