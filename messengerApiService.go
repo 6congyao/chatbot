@@ -18,49 +18,36 @@ const (
 )
 
 type FacebookRecipient struct {
-	id string
+	Id string `json:"id,omitempty"`
 }
 
 type FacebookMessage struct {
-	text string
+	Text string `json:"text,omitempty"`
 }
 
 type FacebookRequest struct {
-	recipient      FacebookRecipient
-	message        FacebookMessage
-	messaging_type string
+	Recipient     FacebookRecipient `json:"recipient,omitempty"`
+	Message       FacebookMessage   `json:"message,omitempty"`
+	MessagingType string            `json:"messaging_type,omitempty"`
 }
 
 func sendMessage(message string, customerId string, messageType string) error {
-	// customerIdMap := make(map[string]string)
-	// customerIdMap["id"] = customerId
-	// var customerIdJSON, _customerIdErr = json.Marshal(&customerIdMap)
-
-	// messageMap := make(map[string]string)
-	// messageMap["text"] = message
-	// var messageMapJSON, _messageErr = json.Marshal(&messageMap)
-
-	// if _customerIdErr != nil || _messageErr != nil {
-	// 	return errors.New("JSON serialization error")
-	// }
 	rcp := FacebookRecipient{
-		id: customerId,
+		Id: customerId,
 	}
 	msg := FacebookMessage{
-		text: message,
+		Text: message,
 	}
 	req := FacebookRequest{
-		recipient:      rcp,
-		message:        msg,
-		messaging_type: messageType,
+		Recipient:     rcp,
+		Message:       msg,
+		MessagingType: messageType,
 	}
 
 	cl := httpretry.NewDefaultClient() //Used for retries
 	var err = requests.
 		URL(baseEndpoint).
 		Param("access_token", FB_PAGE_ACCESS_TOKEN).
-		Post().
-		ContentType("application/json").
 		BodyJSON(&req).
 		Client(cl).
 		Fetch(context.Background())
