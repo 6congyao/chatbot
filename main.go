@@ -19,7 +19,7 @@ func botHandler(ctx context.Context, event events.APIGatewayProxyRequest) (event
 	var response events.APIGatewayProxyResponse
 	if _err != nil {
 		response = events.APIGatewayProxyResponse{
-			StatusCode: 400,
+			StatusCode: 200,
 			Body:       event.Body,
 		}
 		return response, nil
