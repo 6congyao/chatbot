@@ -29,7 +29,7 @@ func sendMessage(message string, customerId string, messageType string) error {
 	messageMap["text"] = message
 	var messageMapJSON, _messageErr = json.Marshal(&messageMap)
 
-	if _customerIdErr == nil || _messageErr != nil {
+	if _customerIdErr == nil && _messageErr == nil {
 		return errors.New("JSON serialization error")
 	}
 
