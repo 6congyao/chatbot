@@ -10,7 +10,10 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
-func store(event FacebookEvent, replyMsg string) error {
+type Ddb struct {
+}
+
+func (d *Ddb) store(event FacebookEvent, replyMsg string) error {
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
 		return err
@@ -28,7 +31,6 @@ func store(event FacebookEvent, replyMsg string) error {
 		},
 		TableName: aws.String("chat-history"),
 	}
-	log.Println(input)
 	_, err = svc.PutItem(context.TODO(), input)
 	if err != nil {
 		return err
