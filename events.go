@@ -14,6 +14,7 @@ type FacebookEvent struct {
 	Id         string
 }
 
+// deprecated
 func makeFacebookEvent(request events.APIGatewayProxyRequest) (FacebookEvent, error) {
 	event := new(FacebookEvent)
 	requestBody := request.Body
