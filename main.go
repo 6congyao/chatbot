@@ -92,7 +92,7 @@ type ArgumentsHandler struct {
 func (a *ArgumentsHandler) Do(ctx context.Context) (context.Context, error) {
 	log.Println("校验参数")
 	event := new(FacebookEvent)
-	fbReq := ctx.Value("fbReq").(events.APIGatewayProxyRequest)
+	fbReq := ctx.Value(ContextKey("fbReq")).(events.APIGatewayProxyRequest)
 
 	log.Println(fbReq.Body)
 
@@ -117,7 +117,7 @@ type TemplateHandler struct {
 // Do 处理事件的逻辑
 func (t *TemplateHandler) Do(ctx context.Context) (context.Context, error) {
 	log.Println("模版化生成回复")
-	fbEvent := ctx.Value("fbEvent").(FacebookEvent)
+	fbEvent := ctx.Value(ContextKey("fbEvent")).(FacebookEvent)
 	message := ""
 	if fbEvent.Field == "messages" {
 		if strings.Contains(fbEvent.Message, "thank") {
@@ -143,8 +143,8 @@ type MessageSender struct {
 // Do 发送消息的逻辑
 func (m *MessageSender) Do(ctx context.Context) (context.Context, error) {
 	log.Println("发送回复")
-	fbReply := ctx.Value("fbReply").(string)
-	fbEvent := ctx.Value("fbEvent").(FacebookEvent)
+	fbReply := ctx.Value(ContextKey("fbReply")).(string)
+	fbEvent := ctx.Value(ContextKey("fbEvent")).(FacebookEvent)
 	if err := sendMessage(fbReply, fbEvent.CustomerId, "RESPONSE"); err != nil {
 		return ctx, err
 	}
@@ -161,8 +161,8 @@ type StorageHandler struct {
 // Do 存储内容的逻辑
 func (s *StorageHandler) Do(ctx context.Context) (context.Context, error) {
 	log.Println("存储内容")
-	fbReply := ctx.Value("fbReply").(string)
-	fbEvent := ctx.Value("fbEvent").(FacebookEvent)
+	fbReply := ctx.Value(ContextKey("fbReply")).(string)
+	fbEvent := ctx.Value(ContextKey("fbEvent")).(FacebookEvent)
 	var stor Storage = new(Ddb)
 	if err := stor.store(fbEvent, fbReply); err != nil {
 		return ctx, err
