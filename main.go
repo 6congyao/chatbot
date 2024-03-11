@@ -16,8 +16,10 @@ func botHandler(ctx context.Context, event events.APIGatewayProxyRequest) (event
 
 	// init handler
 	nullHandler := &NullHandler{}
+	// responsibility chain
 	nullHandler.SetNext(&ArgumentsHandler{}).
 		SetNext(&TemplateHandler{}).
+		//todo: call to ChatGPT/Claude analysing sentiment
 		SetNext(&MessageSender{}).
 		SetNext(&StorageHandler{})
 	// launch
