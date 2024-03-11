@@ -31,7 +31,7 @@ func makeFacebookEvent(request events.APIGatewayProxyRequest) (FacebookEvent, er
 		event.CustomerId = gjson.Get(requestBody, "entry.0.messaging.0.sender.id").String()
 	}
 
-	if len(event.Field) == 0 || len(event.Message) == 0 || len(event.Message) == 0 {
+	if len(event.Field) == 0 || len(event.Message) == 0 {
 		return FacebookEvent{}, errors.New("received invalid webhook response")
 	}
 

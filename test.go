@@ -23,7 +23,21 @@ type Request struct {
 }
 
 // func main() {
-// 	SendMessage("msg for test2", "7436026376434696", "RESPONSE")
+// 	launch()
+// }
+
+// func launch() {
+// 	// 初始化空handler
+// 	nullHandler := new(NullHandler)
+// 	// nullHandler.SetNext(&ArgumentsHandler{})
+// 	// 开始执行业务
+// 	if err := nullHandler.Run(context.Background()); err != nil {
+// 		// 异常
+// 		fmt.Println("Fail | Error:" + err.Error())
+// 		return
+// 	}
+// 	// 成功
+// 	fmt.Println("Success")
 // }
 
 func SendMessage(message string, customerId string, messageType string) error {
@@ -39,8 +53,6 @@ func SendMessage(message string, customerId string, messageType string) error {
 		MessagingType: messageType,
 	}
 	var res string
-	// json, _ := json.MarshalIndent(req, "", " ")
-	// fmt.Println(string(json))
 
 	cl := httpretry.NewDefaultClient() //Used for retries
 	var err = requests.
