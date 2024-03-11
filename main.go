@@ -14,21 +14,19 @@ func botHandler(ctx context.Context, event events.APIGatewayProxyRequest) (event
 		return verifyHandler(ctx, event)
 	}
 
-	// 初始化空handler
+	// init handler
 	nullHandler := &NullHandler{}
 	nullHandler.SetNext(&ArgumentsHandler{}).
 		SetNext(&TemplateHandler{}).
 		SetNext(&MessageSender{}).
 		SetNext(&StorageHandler{})
-	// 开始执行业务
+	// launch
 	rootCtx := context.Background()
 	if err := nullHandler.Run(context.WithValue(rootCtx, ContextKey("fbReq"), event)); err != nil {
-		// 异常
 		log.Println("Fail | Error:" + err.Error())
 	}
 
-	var response events.APIGatewayProxyResponse
-	response = events.APIGatewayProxyResponse{
+	response := events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Body:       event.Body,
 	}
