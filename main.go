@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func botHandler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -53,6 +52,6 @@ func verifyHandler(ctx context.Context, event events.APIGatewayProxyRequest) (ev
 	return response, nil
 }
 
-func main() {
-	lambda.Start(botHandler)
-}
+// func main() {
+// 	lambda.Start(botHandler)
+// }

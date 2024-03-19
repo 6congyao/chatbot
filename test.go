@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/carlmjohnson/requests"
 	"github.com/ybbus/httpretry"
 )
@@ -22,9 +24,38 @@ type Request struct {
 	MessagingType string    `json:"messaging_type,omitempty"`
 }
 
-// func main() {
-// 	launch()
-// }
+func main() {
+	localRun()
+}
+
+func botHandlerTest(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+
+	if event.HTTPMethod == "GET" {
+		return verifyHandler(ctx, event)
+	}
+
+	// init handler
+	nullHandler := &NullHandler{}
+	// responsibility chain
+	nullHandler.SetNext(&ArgumentsHandler{}).
+		SetNext(&TemplateHandler{}).
+		SetNext(&LLMHandler{}).
+		SetNext(&AggregationHandler{}).
+		//todo: call to ChatGPT/Claude analysing sentiment
+		SetNext(&MessageSender{})
+		// SetNext(&StorageHandler{})
+	// launch
+	rootCtx := context.Background()
+	if err := nullHandler.Run(context.WithValue(rootCtx, ContextKey("fbReq"), event)); err != nil {
+		log.Println("Fail | Error:" + err.Error())
+	}
+
+	response := events.APIGatewayProxyResponse{
+		StatusCode: 200,
+		Body:       event.Body,
+	}
+	return response, nil
+}
 
 // func launch() {
 // 	// 初始化空handler
@@ -39,6 +70,36 @@ type Request struct {
 // 	// 成功
 // 	fmt.Println("Success")
 // }
+
+func localRun() {
+	req := events.APIGatewayProxyRequest{
+		Body: `{
+			"object": "page",
+			"entry": [
+				{
+					"id": "257662950760575",
+					"time": 1710820811552,
+					"messaging": [
+						{
+							"sender": {
+								"id": "7436026376434696"
+							},
+							"recipient": {
+								"id": "257662950760575"
+							},
+							"timestamp": 1710820811286,
+							"message": {
+								"mid": "m_OhMe1ddb67e5E_BubHX6QSuUu2NqmjKv-0bILXgkXTQMbxB9WbbqzZJA7SbJQKJCNyeRB3HuQeLrXRr3fc_snA",
+								"text": "thank"
+							}
+						}
+					]
+				}
+			]
+		}`,
+	}
+	botHandlerTest(context.TODO(), req)
+}
 
 func SendMessage(message string, customerId string, messageType string) error {
 	rcp := Recipient{
